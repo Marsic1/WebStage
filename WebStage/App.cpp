@@ -737,8 +737,15 @@ void App::RebuildHotkeys()
     {
         HotkeyCombo hk;
         if (!ParseHotkeyString(m_model.sources[i].hotkey, hk) || !hk.IsSet())
+        {
+            if (!m_model.sources[i].hotkey.empty() && m_model.sources[i].hotkey != "none")
+                Ui::Log(L"Hotkey: source '%s' has unparsable combo '%hs', skipped",
+                    m_model.sources[i].name.c_str(), m_model.sources[i].hotkey.c_str());
             continue;
-        RegisterHotKey(m_hwnd, (int)(HK_SOURCE_BASE + i), hk.modifiers | MOD_NOREPEAT, hk.vk);
+        }
+        if (!RegisterHotKey(m_hwnd, (int)(HK_SOURCE_BASE + i), hk.modifiers | MOD_NOREPEAT, hk.vk))
+            Ui::Log(L"Hotkey: RegisterHotKey failed for source '%s' (%hs), already in use",
+                m_model.sources[i].name.c_str(), m_model.sources[i].hotkey.c_str());
     }
 }
 
@@ -762,6 +769,28 @@ void App::SetHotkeyForSelected()
 
     std::string persist = HotkeyToPersistString(hk);
     m_model.sources[(size_t)sel].hotkey = persist;
+
+    // Same combo on two sources: the second registration would silently
+    // fail, leaving a hotkey that looks set but never fires.
+    if (hk.IsSet())
+    {
+        for (size_t i = 0; i < m_model.sources.size(); i++)
+        {
+            if ((int)i == sel)
+                continue;
+            HotkeyCombo other;
+            if (ParseHotkeyString(m_model.sources[i].hotkey, other) && other.IsSet() &&
+                other.vk == hk.vk && other.modifiers == hk.modifiers)
+            {
+                m_model.sources[(size_t)sel].hotkey = old;
+                std::wstring msg = L"That combination is already used by '" +
+                    m_model.sources[i].name + L"'.";
+                MessageBoxW(m_hwnd, msg.c_str(), APP_TITLE_WITH_VERSION, MB_OK | MB_ICONWARNING);
+                RebuildHotkeys();
+                return;
+            }
+        }
+    }
 
     // Verify the combo can actually be registered before keeping it
     bool ok = true;

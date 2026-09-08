@@ -433,7 +433,7 @@ void SourceList::OnPaint()
         int chipW = 0;
         if (hasHk)
         {
-            std::wstring hk = Ui::FromUtf8(s.hotkey);
+            std::wstring hk = HotkeyDisplayString(s.hotkey);
             SIZE hs = {};
             GetTextExtentPoint32W(mem, hk.c_str(), (int)hk.size(), &hs);
             chipW = hs.cx + Ui::Scale(m_hwnd, 12);
@@ -450,7 +450,7 @@ void SourceList::OnPaint()
         // Hotkey as a bordered mono chip, right-aligned
         if (hasHk)
         {
-            std::wstring hk = Ui::FromUtf8(s.hotkey);
+            std::wstring hk = HotkeyDisplayString(s.hotkey);
             RECT cr = { edge - chipW, row.top + Ui::Scale(m_hwnd, 26),
                 edge, row.bottom - Ui::Scale(m_hwnd, 4) };
             HBRUSH cb = CreateSolidBrush(Ui::ChipBg());

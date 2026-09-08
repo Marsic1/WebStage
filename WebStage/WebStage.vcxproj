@@ -70,7 +70,8 @@ xcopy /D /Y "$(ProjectDir)third_party\cef\bin\*.json" "$(OutDir)"
 xcopy /D /Y "$(ProjectDir)third_party\cef\resources\*.pak" "$(OutDir)"
 xcopy /D /Y "$(ProjectDir)third_party\cef\resources\*.dat" "$(OutDir)"
 mkdir "$(OutDir)locales" 2&gt;nul
-xcopy /D /Y "$(ProjectDir)third_party\cef\resources\locales\*.pak" "$(OutDir)locales\"</Command>
+xcopy /D /Y "$(ProjectDir)third_party\cef\resources\locales\*.pak" "$(OutDir)locales\"
+del "$(OutDir)d3dcompiler_47.dll" 2&gt;nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -102,7 +103,8 @@ xcopy /D /Y "$(ProjectDir)third_party\cef\bin\*.json" "$(OutDir)"
 xcopy /D /Y "$(ProjectDir)third_party\cef\resources\*.pak" "$(OutDir)"
 xcopy /D /Y "$(ProjectDir)third_party\cef\resources\*.dat" "$(OutDir)"
 mkdir "$(OutDir)locales" 2&gt;nul
-xcopy /D /Y "$(ProjectDir)third_party\cef\resources\locales\*.pak" "$(OutDir)locales\"</Command>
+xcopy /D /Y "$(ProjectDir)third_party\cef\resources\locales\*.pak" "$(OutDir)locales\"
+del "$(OutDir)d3dcompiler_47.dll" 2&gt;nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

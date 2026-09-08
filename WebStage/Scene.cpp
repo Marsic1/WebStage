@@ -16,8 +16,28 @@ using json = nlohmann::json;
 // Hotkey string helpers (adapted from Spout2OverlayHUD)
 // ============================================================================
 
+static bool IsExtendedKey(UINT vk)
+{
+    // Keys whose scancode carries the 0xE0 prefix: GetKeyNameTextW needs
+    // bit 24 set for them, otherwise it names the non-extended twin
+    // (e.g. numpad "/" would come back as the main "-" key).
+    switch (vk)
+    {
+    case VK_INSERT: case VK_DELETE: case VK_HOME: case VK_END:
+    case VK_PRIOR: case VK_NEXT:
+    case VK_LEFT: case VK_RIGHT: case VK_UP: case VK_DOWN:
+    case VK_DIVIDE: case VK_NUMLOCK:
+    case VK_RCONTROL: case VK_RMENU: case VK_LWIN: case VK_RWIN: case VK_APPS:
+        return true;
+    }
+    return false;
+}
+
 std::wstring VkToWString(UINT vk)
 {
+    // Stable names first: letters, digits, F-keys and the classic editing /
+    // navigation keys keep their English names on every layout (these are
+    // also the persistence tokens, see VkToToken).
     if (vk >= 'A' && vk <= 'Z') return std::wstring(1, (wchar_t)vk);
     if (vk >= '0' && vk <= '9') return std::wstring(1, (wchar_t)vk);
     if (vk >= VK_F1 && vk <= VK_F24) return L"F" + std::to_wstring(vk - VK_F1 + 1);
@@ -38,6 +58,23 @@ std::wstring VkToWString(UINT vk)
     case VK_UP: return L"Up";
     case VK_DOWN: return L"Down";
     case VK_SNAPSHOT: return L"PrtSc";
+    default: break;
+    }
+    // Everything else (OEM punctuation, numpad, exotic keys) is named by the
+    // OS for the current keyboard layout: "ì" on IT, "]" on US, and real
+    // numpad names instead of "Key109".
+    UINT sc = MapVirtualKeyW(vk, MAPVK_VK_TO_VSC_EX);
+    if (sc)
+    {
+        LONG lp = (LONG)(sc << 16);
+        if (IsExtendedKey(vk)) lp |= 0x1000000;
+        wchar_t name[64] = {};
+        if (GetKeyNameTextW(lp, name, (int)(sizeof(name) / sizeof(name[0]))) > 0 && name[0])
+            return name;
+    }
+    // Last resort: legacy US-layout table, then the raw code.
+    switch (vk)
+    {
     case VK_OEM_3: return L"`";
     case VK_OEM_MINUS: return L"-";
     case VK_OEM_COMMA: return L",";
@@ -50,6 +87,45 @@ std::wstring VkToWString(UINT vk)
     case VK_OEM_6: return L"]";
     }
     return L"Key" + std::to_wstring(vk);
+}
+
+// Stable ASCII token for scene.json: identical to the display name whenever
+// that name parses back to the same VK, otherwise "#<code>" so no key is
+// ever lost in a save/load round-trip (e.g. numpad keys).
+static std::string VkToToken(UINT vk)
+{
+    if (vk >= 'A' && vk <= 'Z') return std::string(1, (char)vk);
+    if (vk >= '0' && vk <= '9') return std::string(1, (char)vk);
+    if (vk >= VK_F1 && vk <= VK_F24) return "F" + std::to_string(vk - VK_F1 + 1);
+    switch (vk)
+    {
+    case VK_SPACE: return "Space";
+    case VK_RETURN: return "Enter";
+    case VK_TAB: return "Tab";
+    case VK_BACK: return "Backspace";
+    case VK_INSERT: return "Insert";
+    case VK_DELETE: return "Delete";
+    case VK_HOME: return "Home";
+    case VK_END: return "End";
+    case VK_PRIOR: return "PgUp";
+    case VK_NEXT: return "PgDn";
+    case VK_LEFT: return "Left";
+    case VK_RIGHT: return "Right";
+    case VK_UP: return "Up";
+    case VK_DOWN: return "Down";
+    case VK_SNAPSHOT: return "PrtSc";
+    case VK_OEM_3: return "`";
+    case VK_OEM_MINUS: return "-";
+    case VK_OEM_COMMA: return ",";
+    case VK_OEM_PERIOD: return ".";
+    case VK_OEM_2: return "/";
+    case VK_OEM_1: return ";";
+    case VK_OEM_7: return "'";
+    case VK_OEM_4: return "[";
+    case VK_OEM_5: return "\\";
+    case VK_OEM_6: return "]";
+    }
+    return "#" + std::to_string(vk);
 }
 
 std::wstring HotkeyToString(const HotkeyCombo& hk)
@@ -66,14 +142,50 @@ std::wstring HotkeyToString(const HotkeyCombo& hk)
 
 std::string HotkeyToPersistString(const HotkeyCombo& hk)
 {
-    std::wstring w = HotkeyToString(hk);
-    if (w.empty()) return "none";
-    // Hotkey names are ASCII-only by construction (see VkToWString)
+    if (!hk.IsSet()) return "none";
     std::string s;
-    s.reserve(w.size());
-    for (wchar_t c : w)
-        s.push_back((char)(c & 0x7F));
+    if (hk.modifiers & MOD_CONTROL) s += "Ctrl+";
+    if (hk.modifiers & MOD_ALT) s += "Alt+";
+    if (hk.modifiers & MOD_SHIFT) s += "Shift+";
+    if (hk.modifiers & MOD_WIN) s += "Win+";
+    s += VkToToken(hk.vk);
     return s;
+}
+
+// Render a persisted hotkey string for the current keyboard layout
+// ("Ctrl+ì" on IT, "Ctrl+]" on US), falling back to the raw string.
+std::wstring HotkeyDisplayString(const std::string& persist)
+{
+    HotkeyCombo hk;
+    if (ParseHotkeyString(persist, hk) && hk.IsSet())
+        return HotkeyToString(hk);
+    if (persist.empty() || persist == "none")
+        return L"none";
+    return Ui::FromUtf8(persist);
+}
+
+static UINT NumericVkToken(const std::string& token)
+{
+    // "#109" (current) or "Key109" (written by older builds that had no
+    // name for the key): both carry the raw virtual-key code.
+    const char* num = nullptr;
+    if (!token.empty() && token[0] == '#')
+        num = token.c_str() + 1;
+    else if (token.size() > 3 && (token[0] == 'K' || token[0] == 'k') &&
+        (token[1] == 'e' || token[1] == 'E') && (token[2] == 'y' || token[2] == 'Y'))
+        num = token.c_str() + 3;
+    else
+        return 0;
+    if (!*num) return 0;
+    for (const char* p = num; *p; p++)
+        if (*p < '0' || *p > '9') return 0;
+    int n = atoi(num);
+    if (n < 1 || n > 254) return 0;
+    // Pure modifier keys can never be the main key of a combo.
+    if (n == VK_SHIFT || n == VK_CONTROL || n == VK_MENU ||
+        n == VK_LWIN || n == VK_RWIN || (n >= VK_LSHIFT && n <= VK_RMENU))
+        return 0;
+    return (UINT)n;
 }
 
 static UINT StringToVk(const std::string& token)
@@ -124,6 +236,8 @@ static UINT StringToVk(const std::string& token)
     if (ieq(token, "Up")) return VK_UP;
     if (ieq(token, "Down")) return VK_DOWN;
     if (ieq(token, "PrtSc")) return VK_SNAPSHOT;
+    UINT numeric = NumericVkToken(token);
+    if (numeric) return numeric;
     return 0;
 }
 

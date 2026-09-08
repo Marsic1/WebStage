@@ -586,7 +586,7 @@ void Properties::Refresh()
 
     std::wstring hk = L"none";
     if (s && !s->hotkey.empty() && s->hotkey != "none")
-        hk = Ui::FromUtf8(s->hotkey);
+        hk = HotkeyDisplayString(s->hotkey);
     setText(IdHotkeyValue, hk);
 
     wchar_t pct[16];

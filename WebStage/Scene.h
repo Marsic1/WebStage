@@ -23,6 +23,10 @@ struct HotkeyCombo
 // Display string, e.g. L"Ctrl+Shift+F1" (empty when unset)
 std::wstring HotkeyToString(const HotkeyCombo& hk);
 
+// Render a persisted hotkey string for the current keyboard layout
+// ("Ctrl+ì" on IT, "Ctrl+]" on US). Falls back to the raw string.
+std::wstring HotkeyDisplayString(const std::string& persist);
+
 // Persistence string: same as display, "none" when unset
 std::string HotkeyToPersistString(const HotkeyCombo& hk);
 
