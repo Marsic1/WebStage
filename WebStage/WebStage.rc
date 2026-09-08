@@ -29,12 +29,12 @@ BEGIN
 		BEGIN
 			VALUE "CompanyName", "WebStage"
 			VALUE "FileDescription", "WebStage - Lightweight HTTP Overlay Scene Sender"
-			VALUE "FileVersion", "0.1.0.0"
+ 			VALUE "FileVersion", "0.1.1.0"
 			VALUE "InternalName", "WebStage.exe"
 			VALUE "LegalCopyright", "2026"
 			VALUE "OriginalFilename", "WebStage.exe"
 			VALUE "ProductName", "WebStage"
-			VALUE "ProductVersion", "0.1.0.0"
+ 			VALUE "ProductVersion", "0.1.1.0"
 		END
 	END
 	BLOCK "VarFileInfo"
