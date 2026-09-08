@@ -38,6 +38,10 @@ Scene settings and the add-source dialog:
 3. Lock finished sources so they can't be dragged by accident. Eye toggles visibility, hotkeys toggle on cue. Per-source CSS restyles pages OBS-browser-source style.
 4. Set the **sender name** (Scene settings) to match your receiver and flip the **ACTIVE** pill. That's the whole show.
 
+### Your scene is one portable file
+
+Everything — sources, URLs, geometry, render sizes, volume/mute/opacity, locks, hotkeys, custom CSS, sender name, FPS cap, canvas size — lives in **`scene.json`** next to the exe. Copy it to another PC (alongside the run folder) and you get the exact same windows and settings there. Back it up to restore your setup after a reinstall. Every save also keeps a `scene.json.bak` safety copy.
+
 ### Using raw HTML as a source (no URL needed)
 
 Put a `data:` URL in the URL field. Important: the app forces `html`/`body` transparent (that's how compositing works), so **paint on a `<div>`, not the body**:
