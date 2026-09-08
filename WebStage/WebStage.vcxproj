@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{17E969DE-353F-47EB-B436-C606C1A9CABF}</ProjectGuid>
+    <RootNamespace>WebStage</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/FS /utf-8 /DWS_CEF_DEBUG_LOG %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>third_party\spout;third_party\cef;third_party\cef\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(ProjectDir)third_party\cef\bin\libcef.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3dcompiler.lib;windowscodecs.lib;windowsapp.lib;dwmapi.lib;uxtheme.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableSegmentHeap>true</EnableSegmentHeap>
+      <AdditionalManifestFiles>WebStage.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+    <PostBuildEvent>
+      <Command>xcopy /D /Y "$(ProjectDir)third_party\cef\bin\*.dll" "$(OutDir)"
+xcopy /D /Y "$(ProjectDir)third_party\cef\bin\*.bin" "$(OutDir)"
+xcopy /D /Y "$(ProjectDir)third_party\cef\bin\*.json" "$(OutDir)"
+xcopy /D /Y "$(ProjectDir)third_party\cef\resources\*.pak" "$(OutDir)"
+xcopy /D /Y "$(ProjectDir)third_party\cef\resources\*.dat" "$(OutDir)"
+mkdir "$(OutDir)locales" 2&gt;nul
+xcopy /D /Y "$(ProjectDir)third_party\cef\resources\locales\*.pak" "$(OutDir)locales\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/FS /utf-8 /DWS_CEF_DEBUG_LOG %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>third_party\spout;third_party\cef;third_party\cef\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(ProjectDir)third_party\cef\bin\libcef.lib;d3d11.lib;dxgi.lib;dcomp.lib;d3dcompiler.lib;windowscodecs.lib;windowsapp.lib;dwmapi.lib;uxtheme.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableSegmentHeap>true</EnableSegmentHeap>
+      <AdditionalManifestFiles>WebStage.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+    <PostBuildEvent>
+      <Command>xcopy /D /Y "$(ProjectDir)third_party\cef\bin\*.dll" "$(OutDir)"
+xcopy /D /Y "$(ProjectDir)third_party\cef\bin\*.bin" "$(OutDir)"
+xcopy /D /Y "$(ProjectDir)third_party\cef\bin\*.json" "$(OutDir)"
+xcopy /D /Y "$(ProjectDir)third_party\cef\resources\*.pak" "$(OutDir)"
+xcopy /D /Y "$(ProjectDir)third_party\cef\resources\*.dat" "$(OutDir)"
+mkdir "$(OutDir)locales" 2&gt;nul
+xcopy /D /Y "$(ProjectDir)third_party\cef\resources\locales\*.pak" "$(OutDir)locales\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <!-- NOTE: the sample scene.json is NEVER copied to the output: the live
+         scene next to the exe belongs to the user, and a PreserveNewest copy
+         once wiped it after a rebuild. Ship the sample by hand if needed. -->
+    <None Include="scene.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="AudioMixer.cpp" />
+    <ClCompile Include="Canvas.cpp" />
+    <ClCompile Include="CefBridge.cpp" />
+    <ClCompile Include="GraphicsRig.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Preview.cpp" />
+    <ClCompile Include="Properties.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SourceList.cpp" />
+    <ClCompile Include="Ui.cpp" />
+    <ClCompile Include="WebSource.cpp" />
+    <ClCompile Include="third_party\spout\SpoutCopy.cpp">
+      <SDLCheck>false</SDLCheck>
+      <DisableSpecificWarnings>4828;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="third_party\spout\SpoutDirectX.cpp">
+      <SDLCheck>false</SDLCheck>
+      <DisableSpecificWarnings>4828;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="third_party\spout\SpoutDX.cpp">
+      <SDLCheck>false</SDLCheck>
+      <DisableSpecificWarnings>4828;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="third_party\spout\SpoutFrameCount.cpp">
+      <SDLCheck>false</SDLCheck>
+      <DisableSpecificWarnings>4828;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="third_party\spout\SpoutSenderNames.cpp">
+      <SDLCheck>false</SDLCheck>
+      <DisableSpecificWarnings>4828;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="third_party\spout\SpoutSharedMemory.cpp">
+      <SDLCheck>false</SDLCheck>
+      <DisableSpecificWarnings>4828;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="third_party\spout\SpoutUtils.cpp">
+      <SDLCheck>false</SDLCheck>
+      <DisableSpecificWarnings>4828;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App.h" />
+    <ClInclude Include="AudioMixer.h" />
+    <ClInclude Include="Canvas.h" />
+    <ClInclude Include="CefBridge.h" />
+    <ClInclude Include="GraphicsRig.h" />
+    <ClInclude Include="Preview.h" />
+    <ClInclude Include="Properties.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Shaders.h" />
+    <ClInclude Include="SourceList.h" />
+    <ClInclude Include="Ui.h" />
+    <ClInclude Include="Version.h" />
+    <ClInclude Include="WebSource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="libcef_dll_wrapper\libcef_dll_wrapper.vcxproj">
+      <Project>{C3F2E1D4-5B6A-4C7D-8E9F-0A1B2C3D4E5F}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="WebStage.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets" Condition="Exists('packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets')" />
+    <Import Project="packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets" Condition="Exists('packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.ImplementationLibrary.1.0.260126.7\build\native\Microsoft.Windows.ImplementationLibrary.targets'))" />
+    <Error Condition="!Exists('packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets'))" />
+  </Target>
+</Project>
+

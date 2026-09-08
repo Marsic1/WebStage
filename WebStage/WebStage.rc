@@ -1,0 +1,46 @@
+﻿// ============================================================================
+// WebStage - Resource File
+// Defines application icons and resources
+// ============================================================================
+
+#include <windows.h>
+#include "resource.h"
+
+// Application icon - used for window and tray
+// ID 101 corresponds to IDI_APPICON defined in resource.h
+IDI_APPICON ICON "icon.ico"
+
+// Tray icon shown while the sender is stopped (app icon + red badge)
+IDI_TRAYSTOP ICON "tray_stop.ico"
+
+// Version information
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 0,1,0,0
+PRODUCTVERSION 0,1,0,0
+FILEFLAGSMASK 0x3f
+FILEFLAGS 0x0
+FILEOS VOS__WINDOWS32
+FILETYPE VFT_APP
+FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "040904B0"
+		BEGIN
+			VALUE "CompanyName", "WebStage"
+			VALUE "FileDescription", "WebStage - Lightweight HTTP Overlay Scene Sender"
+			VALUE "FileVersion", "0.1.0.0"
+			VALUE "InternalName", "WebStage.exe"
+			VALUE "LegalCopyright", "2026"
+			VALUE "OriginalFilename", "WebStage.exe"
+			VALUE "ProductName", "WebStage"
+			VALUE "ProductVersion", "0.1.0.0"
+		END
+	END
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x409, 1200
+	END
+END
+
+

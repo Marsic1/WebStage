@@ -1,0 +1,35 @@
+# Build outputs (regenerable)
+x64/
+obj/
+.vs/
+*.user
+*.sdf
+*.opensdf
+*.suo
+*.userosscache
+
+# Binaries and debug artifacts (regenerable)
+*.exe
+*.dll
+*.lib
+*.exp
+*.ilk
+*.pdb
+
+# Chromium redistributables (~300MB, exceeds GitHub file limits).
+# Download per README "Building from source" into third_party/cef/bin/.
+**/third_party/cef/bin/
+
+# NuGet packages (auto-restored from packages.config on build)
+packages/
+
+# Logs
+*.log
+
+# User scene + safety backup (per project policy: scenes are user data,
+# never committed). Ship a sample by hand if needed.
+scene.json
+scene.json.bak
+
+# Dev notes (not for publication)
+plan.md

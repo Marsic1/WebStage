@@ -1,0 +1,9 @@
+# Normalize line endings (silences CRLF warnings on Windows checkouts)
+* text=auto
+
+# Keep these byte-exact
+*.ico binary
+*.png binary
+*.pak binary
+*.dat binary
+*.bin binary
