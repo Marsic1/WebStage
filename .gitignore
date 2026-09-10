@@ -30,6 +30,8 @@ packages/
 # never committed). Ship a sample by hand if needed.
 scene.json
 scene.json.bak
+scene2.json
+scene2.json.bak
 
 # Dev notes (not for publication)
 plan.md
